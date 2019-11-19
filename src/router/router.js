@@ -505,6 +505,15 @@ export const asyncRouterMap = [
               title: '用户列表',
               keepAlive: true
             }
+          },
+          {
+            path: '/system/dict-type-list',
+            name: 'DictionaryTypeList',
+            component: () => import('@/views/system/dictionary/DictionaryType'),
+            meta: {
+              title: '字典类型列表',
+              keepAlive: true
+            }
           }
         ]
       }

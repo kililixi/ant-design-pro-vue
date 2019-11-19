@@ -159,8 +159,8 @@ export default {
             current: r.current, // 返回结果中的当前分页数
             total: r.total, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
-            pageSize: (pagination && pagination.pageSize) ||
-              this.localPagination.pageSize
+            pageSize: (pagination && pagination.size) ||
+              this.localPagination.size
           }) || false
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
           if (r.records.length === 0 && this.showPagination && this.localPagination.current > 1) {
