@@ -15,7 +15,7 @@
           :labelCol="labelCol"
           :wrapperCol="wrapperCol"
           label="名称">
-          <a-input placeholder="请输入名称" v-decorator="['itemText', validatorRules.itemText]"/>
+          <a-input placeholder="请输入名称" v-model=""/>
         </a-form-item>
 
         <a-form-item
@@ -40,14 +40,6 @@
           值越小越靠前，支持小数
         </a-form-item>
 
-        <a-form-item
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol"
-          label="是否启用"
-          hasFeedback>
-          <a-switch checkedChildren="启用" unCheckedChildren="禁用" @change="onChose" v-model="visibleCheck"/>
-        </a-form-item>
-
       </a-form>
     </a-spin>
   </a-modal>
@@ -56,6 +48,14 @@
 <script>
 import pick from 'lodash.pick'
 // import { addDictItem, editDictItem } from '@/api/api'
+const dictionaryForm = {
+  code: '',
+  description: '',
+  dictType: '',
+  id: '',
+  name: '',
+  sort: 0
+}
 
 export default {
   name: 'DictItemModal',
