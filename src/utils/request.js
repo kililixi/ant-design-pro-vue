@@ -24,8 +24,7 @@ const err = (error) => {
         message: 'Forbidden',
         description: data.message
       })
-    }
-    if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
+    } else if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
       notification.error({
         message: 'Unauthorized',
         description: 'Authorization verification failed'
@@ -37,6 +36,11 @@ const err = (error) => {
           }, 1500)
         })
       }
+    } else {
+      notification.error({
+        message: data.message,
+        description: data.errors && data.errors.join('\r\n')
+      })
     }
   }
   return Promise.reject(error)

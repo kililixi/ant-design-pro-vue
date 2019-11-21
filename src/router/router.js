@@ -515,6 +515,15 @@ export const asyncRouterMap = [
               keepAlive: true
             }
           }
+          // {
+          //   path: '/system/dict-list',
+          //   name: 'DictionaryList',
+          //   component: () => import('@/views/system/dictionary/Dictionary'),
+          //   meta: {
+          //     title: '字典列表',
+          //     keepAlive: true
+          //   }
+          // }
         ]
       }
     ]

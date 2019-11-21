@@ -15,35 +15,33 @@
           </a-col>
           <a-col :md="8" :sm="24">
             <span class="table-page-search-submitButtons">
-              <a-button type="primary">查询</a-button>
-              <a-button style="margin-left: 8px">重置</a-button>
+              <a-button type="primary" @click="handleSearch()">查询</a-button>
+              <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
             </span>
           </a-col>
         </a-row>
       </a-form>
     </div>
 
-    <s-table :columns="columns" :data="loadData" :rowKey="(record) => record.id">
+    <div class="table-operator">
+      <a-button type="primary" icon="plus" @click="handleAdd">新增</a-button>
+    </div>
+
+    <s-table ref="table" :columns="columns" :data="loadData" :rowKey="(record) => record.id">
 
       <span slot="action" slot-scope="text, record">
         <a @click="handleEdit(record)">编辑</a>
         <a-divider type="vertical" />
-        <a-dropdown>
-          <a class="ant-dropdown-link">
-            更多 <a-icon type="down" />
-          </a>
-          <a-menu slot="overlay">
-            <a-menu-item>
-              <a href="javascript:;">详情</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">禁用</a>
-            </a-menu-item>
-            <a-menu-item>
-              <a href="javascript:;">删除</a>
-            </a-menu-item>
-          </a-menu>
-        </a-dropdown>
+        <a @click="handleConfig(record)">配置</a>
+        <a-divider type="vertical" />
+        <a-popconfirm
+          title="确认删除?"
+          @confirm="handleDelete(record)"
+          okText="是"
+          cancelText="否"
+        >
+          <a>删除</a>
+        </a-popconfirm>
       </span>
     </s-table>
 
@@ -98,16 +96,19 @@
       </a-form>
     </a-modal>
 
+    <dict-item-list ref="dictItemList"></dict-item-list>
   </a-card>
 </template>
 
 <script>
 import { STable } from '@/components'
+import DictItemList from './DictItemList'
 
 export default {
   name: 'DictionaryType',
   components: {
-    STable
+    STable,
+    DictItemList
   },
   data () {
     return {
@@ -177,13 +178,40 @@ export default {
   created () {
   },
   methods: {
-    handleEdit (record) {
-      this.mdl = Object.assign({}, record)
-      console.log(this.mdl)
+    handleSearch () {
+      console.log('refs', this.$refs)
+
+      this.$refs.table.refresh(true)
+    },
+    handleAdd () {
+      this.mdl = Object.assign({})
       this.visible = true
     },
+    handleEdit (record) {
+      this.mdl = Object.assign({}, record)
+      this.visible = true
+    },
+    handleConfig (record) {
+      this.$refs.dictItemList.edit(record)
+    },
     handleOk () {
-
+      if (this.mdl.id) {
+        // 修改
+        this.$http.put(`/sys_dictionary_types/${this.mdl.id}`, this.mdl).then(result => {
+          this.visible = false
+          this.$refs.table.refresh(true)
+        })
+      } else {
+        // 新增
+        this.$http.post(`/sys_dictionary_types`, this.mdl).then(result => {
+          this.visible = false
+          this.$refs.table.refresh(true)
+        })
+      }
+    },
+    async handleDelete (record) {
+      await this.$http.delete(`/sys_dictionary_types/${record.id}`)
+      this.handleSearch()
     },
     onChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
